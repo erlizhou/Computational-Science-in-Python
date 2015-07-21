@@ -1,8 +1,8 @@
-'''balance = 4213
+balance = 4213
 annualInterestRate = 0.2
-monthlyPaymentRate = 0.04'''
+monthlyPaymentRate = 0.04
 
-'''def payMinimumPerMonth(balance, annualInterestRate, monthlyPaymentRate, month):
+def payMinimumPerMonth1(balance, annualInterestRate, monthlyPaymentRate, month):
    minMonthPayment = monthlyPaymentRate * balance
    monthUnpaidBalance = balance - minMonthPayment
    updateBalance = monthUnpaidBalance + annualInterestRate * monthUnpaidBalance / 12
@@ -14,15 +14,15 @@ monthlyPaymentRate = 0.04'''
 totalPaid = 0
 for i in range(1,13):
   totalPaid += monthlyPaymentRate * balance
-  balance = payMinimumPerMonth(balance, annualInterestRate, monthlyPaymentRate, i)
+  balance = payMinimumPerMonth1(balance, annualInterestRate, monthlyPaymentRate, i)
 
 print "Total paid: " + str(round(totalPaid, 2))
-print "Remaining balance: " + str(round(balance, 2))'''
+print "Remaining balance: " + str(round(balance, 2))
 
-'''balance = 3329
+balance = 3329
 annualInterestRate = 0.2
 
-def payMinimumPerMonth(balance, minMonthPayment, annualInterestRate):
+def payMinimumPerMonth2(balance, minMonthPayment, annualInterestRate):
    monthInterestRate = annualInterestRate / 12.0
    monthUnpaidBalance = balance - minMonthPayment
    updateBalance = monthUnpaidBalance + monthInterestRate * monthUnpaidBalance
@@ -32,7 +32,7 @@ minMonthPayment = 10
 while True:
 	stored = balance
 	for i in range(1,13):
-		balance = payMinimumPerMonth(balance, minMonthPayment, annualInterestRate)
+		balance = payMinimumPerMonth2(balance, minMonthPayment, annualInterestRate)
 
 	if balance < 0:
 		break
@@ -40,12 +40,12 @@ while True:
 		balance = stored
 		minMonthPayment += 10
 
-print "Lowest Payment: " + str(minMonthPayment)'''
+print "Lowest Payment: " + str(minMonthPayment)
 
 balance = 320000
 annualInterestRate = 0.2
 
-def payMinimumPerMonth(balance, mediumMonthPayment, annualInterestRate):
+def payMinimumPerMonth3(balance, mediumMonthPayment, annualInterestRate):
    monthInterestRate = annualInterestRate / 12
    monthUnpaidBalance = balance - mediumMonthPayment
    updateBalance = monthUnpaidBalance + monthInterestRate * monthUnpaidBalance
@@ -58,7 +58,7 @@ while True:
 	mediumMonthPayment = (minMonthPayment + maxMonthPayment) / 2
 	stored = balance
 	for i in range(1,13):
-		balance = payMinimumPerMonth(balance, mediumMonthPayment, annualInterestRate)
+		balance = payMinimumPerMonth3(balance, mediumMonthPayment, annualInterestRate)
 
 	if balance < 0:
 		if (mediumMonthPayment - minMonthPayment <= 0.01):
@@ -71,8 +71,3 @@ while True:
 		minMonthPayment = mediumMonthPayment
 
 print "Lowest Payment: " + str(round(mediumMonthPayment, 2))
-
-if __name__ == "__main__":
-	#payMinimumPerMonth(balance, annualInterestRate, monthlyPaymentRate, 12)
-	#payMinimumPerMonth(balance, minMonthPayment, annualInterestRate)
-	payMinimumPerMonth(balance, mediumMonthPayment, annualInterestRate)

@@ -195,4 +195,4 @@ if __name__ == '__main__':
     bestShift = findBestShift(wordList, s)
     assert applyShift(s, bestShift) == 'Hello, world!' 
     # To test decryptStory, comment the above four lines and uncomment this line:
-    decryptStory()
+    # decryptStory()

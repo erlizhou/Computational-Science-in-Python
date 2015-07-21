@@ -15,7 +15,13 @@ def reverseString(aStr):
     aStr: a string
     returns: a reversed string
     """
-    ### TODO.
+    if len(aStr) == 0:
+    	return ''
+    else:
+    	return aStr[-1] + reverseString(aStr[:-1])
+
+print reverseString('abc')
+print reverseString('1245#$LSm2al0')
 
 #
 # Problem 4: X-ian
@@ -36,7 +42,19 @@ def x_ian(x, word):
     word: a string
     returns: True if word is x_ian, False otherwise
     """
-    ###TODO.
+    if not x:
+        return True
+    elif not word:
+        return False
+    elif x[0] == word[0]:
+        return x_ian(x[1:], word[1:])
+    else:
+        return x_ian(x, word[1:])
+
+print x_ian('eric', 'meritocracy')
+print x_ian('eric', 'cerium')
+print x_ian('john', 'mahjong')
+
 
 #
 # Problem 5: Typewriter
@@ -52,4 +70,10 @@ def insertNewlines(text, lineLength):
         the next word.
     returns: a string, with newline characters inserted appropriately. 
     """
-    ### TODO.
+    if len(text) < lineLength:
+        return text
+    else:
+        return text[:10] + '\n' + insertNewlines(text[10:], lineLength)
+
+print insertNewlines('Today is a great day, temperature is at 75 degrees with wind blowing fast.', 10)
+

@@ -130,9 +130,41 @@ class Family(object):
           distance from each node to their common ancestor.
         """
         
-        ## YOUR CODE HERE ####
-        raise NotImplementedError()
+        a_node = self.names_to_nodes[a]
+        b_node = self.names_to_nodes[b]
 
+        visited = []
+        current_a = a_node
+        current_b = b_node
+        ancestor = None
+
+        while current_a != None or current_b != None:
+            if current_a in visited:
+                ancestor = current_a
+                break
+            elif current_a != None:
+                visited.append(current_a)
+                current_a = current_a.get_parent()
+
+            if current_b in visited:
+                ancestor = current_b
+                break
+            elif current_b != None:
+                visited.append(current_b)
+                current_b = current_b.get_parent()
+
+        distance_a = self.find_distance(ancestor, a_node)
+        distance_b = self.find_distance(ancestor, b_node)
+        cousin_type = min(distance_a, distance_b) - 1
+        degree = abs(distance_a - distance_b)
+        return (cousin_type, degree)
+
+    def find_distance(self, ancestor, node):
+        d = 0
+        while node != ancestor:
+            d += 1
+            node = node.get_parent()
+        return d
 
 f = Family("a")
 f.set_children("a", ["b", "c"])

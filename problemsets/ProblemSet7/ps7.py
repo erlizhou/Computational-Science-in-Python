@@ -47,27 +47,28 @@ def process(url):
 # Problem 1
 
 class NewsStory(object):
-	def __init__(self, guid, title, subject, summary, link):
-		self.guid = guid
-		self.title = title
-		self.subject = subject
-		self.summary = summary
-		self.link = link
 
-	def getGuid(self):
-		return self.guid
+    def __init__(self, guid, title, subject, summary, link):
+        self.guid = guid
+        self.title = title
+        self.subject = subject
+        self.summary = summary
+        self.link = link
 
-	def getTitle(self):
-		return self.title
+    def getGuid(self):
+        return self.guid
 
-	def getSubject(self):
-		return self.subject
+    def getTitle(self):
+        return self.title
 
-	def getSummary(self):
-		return self.summary
+    def getSubject(self):
+        return self.subject
 
-	def getLink(self):
-		return self.link
+    def getSummary(self):
+        return self.summary
+
+    def getLink(self):
+        return self.link
 
 #======================
 # Part 2
@@ -86,71 +87,71 @@ class Trigger(object):
 # Problems 2-5
 
 class WordTrigger(Trigger):
-	def __init__(self, word):
-		self.word = word.lower()
+    def __init__(self, word):
+        self.word = word.lower()
 
-	def isWordIn(self, text):
-		modified_text = ""
-		for letter in text:
-			if letter in string.punctuation:
-				modified_text += " "
-			else:
-				modified_text += letter
-		split_text = modified_text.split(" ")
-		for split_word in split_text:
-			if split_word.lower() == self.word:
-				return True
-		return False
+    def isWordIn(self, text):
+        modified_text = ""
+        for letter in text:
+            if letter in string.punctuation:
+                modified_text += " "
+            else:
+                modified_text += letter
+        split_text = modified_text.split(" ")
+        for split_word in split_text:
+            if split_word.lower() == self.word:
+                return True
+        return False
 
 class TitleTrigger(WordTrigger):
-	def evaluate(self, story):
-		return WordTrigger.isWordIn(self, story.getTitle())
+    def evaluate(self, story):
+        return WordTrigger.isWordIn(self, story.getTitle())
 
 class SubjectTrigger(WordTrigger):
-	def evaluate(self, story):
-		return WordTrigger.isWordIn(self, story.getSubject())
+    def evaluate(self, story):
+        return WordTrigger.isWordIn(self, story.getSubject())
 
 class SummaryTrigger(WordTrigger):
-	def evaluate(self, story):
-		return WordTrigger.isWordIn(self, story.getSummary())
+    def evaluate(self, story):
+        return WordTrigger.isWordIn(self, story.getSummary())
 
 
 # Composite Triggers
 # Problems 6-8
 
 class NotTrigger(Trigger):
-	def __init__(self, trigger):
-		self.trigger = trigger
+    def __init__(self, trigger):
+        self.trigger = trigger
 
-	def evaluate(self, story):
-		return not self.trigger.evaluate(story)
+    def evaluate(self, story):
+        return not self.trigger.evaluate(story)
 
 class AndTrigger(Trigger):
-	def __init__(self, trigger1, trigger2):
-		self.trigger1 = trigger1
-		self.trigger2 = trigger2
+    def __init__(self, trigger1, trigger2):
+        self.trigger1 = trigger1
+        self.trigger2 = trigger2
 
-	def evaluate(self, story):
-		return self.trigger1.evaluate(story) and self.trigger2.evaluate(story)
+    def evaluate(self, story):
+        return self.trigger1.evaluate(story) and self.trigger2.evaluate(story)
 
 class OrTrigger(Trigger):
-	def __init__(self, trigger1, trigger2):
-		self.trigger1 = trigger1
-		self.trigger2 = trigger2
+    def __init__(self, trigger1, trigger2):
+        self.trigger1 = trigger1
+        self.trigger2 = trigger2
 
-	def evaluate(self, story):
-		return self.trigger1.evaluate(story) or self.trigger2.evaluate(story)
+    def evaluate(self, story):
+        return self.trigger1.evaluate(story) or self.trigger2.evaluate(story)
 
 
 # Phrase Trigger
 # Question 9
 
 class PhraseTrigger(Trigger):
-	def __init__(self, word):
-		self.word = word
+    def __init__(self, word):
+        self.word = word
 
-	def evaluate(self, story):
-		return self.word in story.getTitle() or self.word in story.getSummary() or self.word in story.getSubject()
+    def evaluate(self, story):
+        return self.word in story.getTitle() or self.word in story.getSummary() or self.word in story.getSubject()
 
 
 #======================
@@ -166,10 +167,10 @@ def filterStories(stories, triggerlist):
     """
     stories_filtered = []
     for story in stories:
-    	for trigger in triggerlist:
-    		if trigger.evaluate(story) == True:
-    			stories_filtered.append(story)
-    			break
+        for trigger in triggerlist:
+            if trigger.evaluate(story) == True:
+                stories_filtered.append(story)
+                break
     return stories_filtered
 
 #======================
@@ -192,7 +193,22 @@ def makeTrigger(triggerMap, triggerType, params, name):
 
     Returns a new instance of a trigger (ex: TitleTrigger, AndTrigger).
     """
-    # TODO: Problem 11
+    if triggerType == "TITLE":
+        triggerMap[name] = TitleTrigger(params[0])
+    elif triggerType == "SUBJECT":
+        triggerMap[name] = SubjectTrigger(params[0])                           
+    elif triggerType == "SUMMARY":
+        triggerMap[name] = SummaryTrigger(params[0])
+    elif triggerType == "AND":
+        triggerMap[name] = AndTrigger(triggerMap[params[0]], triggerMap[params[1]])
+    elif triggerType == "NOT":
+        triggerMap[name] = NotTrigger(triggerMap[params[0]])
+    elif triggerType == "OR":
+        triggerMap[name] = OrTrigger(triggerMap[params[0]], triggerMap[params[1]])
+    elif triggerType == "PHRASE":
+        triggerMap[name] = PhraseTrigger(' '.join(params))
+
+    return triggerMap[name]
 
 
 def readTriggerConfig(filename):
@@ -250,9 +266,8 @@ def main_thread(master):
         t4 = OrTrigger(t2, t3)
         triggerlist = [t1, t4]
         
-        # TODO: Problem 11
         # After implementing makeTrigger, uncomment the line below:
-        # triggerlist = readTriggerConfig("triggers.txt")
+        triggerlist = readTriggerConfig("triggers.txt")
 
         # **** from here down is about drawing ****
         frame = Frame(master)
@@ -305,6 +320,7 @@ def main_thread(master):
 
 
 if __name__ == '__main__':
+
     root = Tk()
     root.title("Some RSS parser")
     thread.start_new_thread(main_thread, (root,))
